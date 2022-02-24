@@ -320,4 +320,4 @@ class PipelinedModel(object):
             'file': self.archive_model_file_path,
         }
         with self.lock, open(os.path.join(self.model_path, 'import_model.json'), 'w', encoding='utf-8') as f:
-            json.dump(config, f)
+            json.dump(config, f, indent=4)
