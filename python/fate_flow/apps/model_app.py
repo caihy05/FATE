@@ -375,6 +375,7 @@ def operate_model(model_operation):
             try:
                 model = pipelined_model.PipelinedModel(model_id=request_config["model_id"], model_version=request_config["model_version"])
                 if model.exists():
+                    model.gen_model_import_config()
                     archive_file_path = model.packaging_model()
                     operation_record(request_config, "export", "success")
                     return send_file(archive_file_path, attachment_filename=os.path.basename(archive_file_path), as_attachment=True)

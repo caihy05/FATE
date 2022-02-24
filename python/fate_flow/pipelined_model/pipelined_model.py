@@ -22,6 +22,7 @@ from ruamel import yaml
 from copy import deepcopy
 from filelock import FileLock
 import hashlib
+import json
 
 from os.path import join, getsize
 from fate_arch.common import file_utils
@@ -308,3 +309,15 @@ class PipelinedModel(object):
         for root, dirs, files in os.walk(self.model_path):
             size += sum([getsize(join(root, name)) for name in files])
         return round(size/1024)
+
+    def gen_model_import_config(self):
+        role, party_id, model_id = self.model_id.split('#', 2)
+        config = {
+            'role': role,
+            'party_id': int(party_id),
+            'model_id': model_id,
+            'model_version': self.model_version,
+            'file': self.archive_model_file_path,
+        }
+        with self.lock, open(os.path.join(self.model_path, 'import_model.json'), 'w', encoding='utf-8') as f:
+            json.dump(config, f)
